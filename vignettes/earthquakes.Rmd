@@ -1,0 +1,73 @@
+---
+title: "earthquakes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{earthquakes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(earthquakes)
+```
+
+# Earthquakes visulaization
+
+## Introduction
+
+This package allows one to visualize the NOAA significant earthquake data
+in various ways.
+
+## Loading and cleaning the data
+
+You can load the NOAA earthquake data using the load_data function. Then
+use the eq_clean_data function to prepare a cleaned up data set. This creates
+a proper DATE column, cleans up the LOCATION column and fixes various data
+types.
+
+```{r}
+data <- load_data()
+data <- eq_clean_data(data)
+tibble::glimpse(data)
+```
+
+## Cleaning the location
+
+The eq_clean_data function also cleans the LOCATION column. This is done
+by calling the eq_location_clean function.
+
+```{r}
+location <- c("ABC", "ABC: DEF", "ABC: DEF: GHI")
+eq_location_clean(location)
+```
+
+## Plotting a timeline
+
+The earthquakes can be plotted on a timeline, including optional labels.
+
+```{r}
+data <- eq_clean_data(load_data())
+data <- data[data$COUNTRY %in% c("GREECE", "TURKEY") & data$YEAR > 2005, ]
+ggplot2::ggplot(data) +
+  geom_timeline(ggplot2::aes(x = DATE, y = COUNTRY)) +
+  geom_timeline_label(ggplot2::aes(x = DATE, y = COUNTRY, label = LOCATION_NAME))
+```
+
+## Plotting a leaflet map
+
+The earthquakes can be plotted on a map, including interactive labels.
+
+```{r}
+data <- eq_clean_data(load_data())
+data <- data[data$COUNTRY %in% c("GREECE", "TURKEY") & data$YEAR > 2005, ]
+data$LABEL <- eq_create_label(data)
+eq_map(data, annot_col = "LABEL")
+```
+
