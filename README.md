@@ -2,6 +2,7 @@
 # earthquakes
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/damianbrunold/earthquakes.svg?branch=master)](https://travis-ci.org/damianbrunold/earthquakes)
 <!-- badges: end -->
 
 The goal of earthquakes is to visualize the NOAA significant earthquake dataset
